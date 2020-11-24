@@ -55,12 +55,12 @@ export type AxisDefinition = GamepadAxisDefinition;
 
 export interface GamepadAxisDefinition {
   type: "gamepad";
-  gamepad: Gamepad;
+  gamepad: Gamepad["index"];
   axis: number;
 }
 
 export function gamepadAxis(
-  gamepad: Gamepad,
+  gamepad: Gamepad["index"],
   axis: number
 ): GamepadAxisDefinition {
   return {

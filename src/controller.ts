@@ -18,6 +18,13 @@ export interface ControllerButton {
   value: number;
 }
 
+export function areControllerButtonsEqual(
+  cb1: ControllerButton,
+  cb2: ControllerButton
+): boolean {
+  return cb1.pressed === cb2.pressed && cb1.value === cb2.value;
+}
+
 const defaultControllerButton = (): ControllerButton => ({
   pressed: false,
   value: 0,
@@ -25,6 +32,13 @@ const defaultControllerButton = (): ControllerButton => ({
 
 export interface ControllerAxis {
   value: number;
+}
+
+export function areControllerAxesEqual(
+  ca1: ControllerAxis,
+  ca2: ControllerAxis
+) {
+  return ca1.value === ca2.value;
 }
 
 const defaultControllerAxis = (): ControllerAxis => ({
@@ -87,16 +101,14 @@ export class InternalController {
     ControllerInputDefinition
   ][];
 
+  private controller: Controller;
+
   constructor(controllerDefinition: ControllerDefinition) {
     this.controllerDefinition = (Object.entries(controllerDefinition) as Array<
       [keyof ControllerDefinition, ControllerInputDefinition]
     >).filter(([key]) => controllerInputs.has(key));
 
-    console.log(this.controllerDefinition);
-  }
-
-  public update = (): Controller | undefined => {
-    const controller: Controller = {
+    this.controller = {
       button0: defaultControllerButton(),
       button1: defaultControllerButton(),
       button2: defaultControllerButton(),
@@ -120,20 +132,40 @@ export class InternalController {
       axis2: defaultControllerAxis(),
       axis3: defaultControllerAxis(),
     };
+  }
+
+  public update = (): Partial<Controller> => {
+    const controllerDiff: Partial<Controller> = {};
 
     this.controllerDefinition.forEach(([controllerInput, inputDefinition]) => {
       if (isButtonDefinition(controllerInput, inputDefinition)) {
-        controller[controllerInput] = this.updateButton(
-          inputDefinition
-        ) as ControllerAxis & ControllerButton;
+        const button = this.updateButton(inputDefinition);
+        if (
+          !areControllerButtonsEqual(
+            button,
+            this.controller[controllerInput] as ControllerButton
+          )
+        ) {
+          controllerDiff[controllerInput] = button;
+          this.controller[controllerInput] = button;
+        }
       } else {
-        controller[controllerInput] = this.updateAxis(
-          inputDefinition
-        ) as ControllerAxis & ControllerButton;
+        const axis = this.updateAxis(inputDefinition);
+        if (
+          !areControllerAxesEqual(
+            axis,
+            this.controller[controllerInput] as ControllerAxis
+          )
+        ) {
+          controllerDiff[controllerInput] = axis as ControllerButton &
+            ControllerAxis;
+          this.controller[controllerInput] = axis as ControllerButton &
+            ControllerAxis;
+        }
       }
     });
 
-    return controller;
+    return controllerDiff;
   };
 
   private updateButton(buttonDefinition: ButtonDefinition): ControllerButton {
@@ -199,7 +231,10 @@ export class InternalController {
   private updateGamepadAxis(
     axisDefinition: GamepadAxisDefinition
   ): ControllerAxis {
-    const axis = axisDefinition.gamepad.axes[axisDefinition.axis];
+    const axis: number = gamepadSource.getGamepadAxis(
+      axisDefinition.gamepad,
+      axisDefinition.axis
+    );
 
     return {
       value: axis,

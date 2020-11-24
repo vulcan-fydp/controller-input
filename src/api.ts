@@ -4,7 +4,10 @@ import { ControllerDefinition } from "@src/definition";
 import { RequestAnimationFrameScheduler, Scheduler } from "@src/scheduler";
 import { ControllerInputEventData } from "./events";
 
-const controllers = new Map<ControllerDefinition, InternalController>();
+export type ControllerId = number;
+let nextId: ControllerId = 0;
+
+const controllers = new Map<ControllerId, InternalController>();
 
 let scheduler: Scheduler;
 
@@ -20,26 +23,26 @@ export const stopControllerInputEvents = (): void => {
 
 export const addController = (
   controllerDefinition: ControllerDefinition
-): void => {
-  controllers.set(
-    controllerDefinition,
-    new InternalController(controllerDefinition)
-  );
+): ControllerId => {
+  const id = nextId++;
+  controllers.set(id, new InternalController(controllerDefinition));
+  return id;
 };
 
-export const removeController = (
-  controllerDefinition: ControllerDefinition
-): void => {
-  controllers.delete(controllerDefinition);
+export const removeController = (id: ControllerId): void => {
+  controllers.delete(id);
 };
 
-export const forceUpdate = (emitEvents = true): Controller[] => {
-  const updatedControllers: Controller[] = [];
+export const forceUpdate = (emitEvents = true): ControllerInputEventData[] => {
+  const updatedControllers: ControllerInputEventData[] = [];
 
-  controllers.forEach((controller) => {
-    const updatedController = controller.update();
-    if (updatedController) {
-      updatedControllers.push(updatedController);
+  controllers.forEach((controller, id) => {
+    const controllerDiff = controller.update();
+    if (Object.keys(controllerDiff).length > 0) {
+      updatedControllers.push({
+        controllerDiff,
+        id,
+      });
     }
   });
 
@@ -47,7 +50,7 @@ export const forceUpdate = (emitEvents = true): Controller[] => {
     updatedControllers.forEach((controller) => {
       const event = new CustomEvent<ControllerInputEventData>(
         "controllerinput",
-        { detail: { controller } }
+        { detail: controller }
       );
 
       window.dispatchEvent(event);
