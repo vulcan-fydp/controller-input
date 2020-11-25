@@ -37,7 +37,7 @@ export interface ControllerAxis {
 export function areControllerAxesEqual(
   ca1: ControllerAxis,
   ca2: ControllerAxis
-) {
+): boolean {
   return ca1.value === ca2.value;
 }
 
