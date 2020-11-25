@@ -5,11 +5,15 @@ const srcPath = path.join(__dirname, "..", "src");
 
 module.exports = {
   entry: {
-    index: path.join(srcPath, "web.ts"),
+    index: path.join(srcPath, "index.ts"),
   },
   output: {
     filename: "[name].js",
     path: buildPath,
+    library: "ControllerInput",
+    libraryTarget: "umd",
+    globalObject: "this",
+    umdNamedDefine: true,
   },
   module: {
     rules: [
