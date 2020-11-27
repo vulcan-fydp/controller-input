@@ -1,7 +1,15 @@
 {
   "name": "controller-input",
   "version": "0.1.0",
-  "description": "",
+  "description": "Unifies browser user input sources into a simple controller model, useful for loop driven applications like games",
+  "keywords": [
+    "keyboard",
+    "gamepad",
+    "mouse",
+    "controller",
+    "touch",
+    "pointer"
+  ],
   "main": "build/index.js",
   "scripts": {
     "build": "webpack --config config/webpack.prod.js",
