@@ -12,7 +12,7 @@ import {
 } from "./definition";
 import { gamepadSource } from "./sources/gamepads";
 import { keySource } from "./sources/keys";
-import { mouseButtonSource } from "./sources/mouse";
+import { pointerSource } from "./sources/pointer";
 
 export interface ControllerButton {
   pressed: boolean;
@@ -175,8 +175,6 @@ export class InternalController {
         return this.updateGamepadButton(buttonDefinition);
       case "key":
         return this.updateKeyButton(buttonDefinition);
-      case "mouse": // Todo: remove
-        return this.updateMouseButton(buttonDefinition);
       case "pointer":
         return this.updatePointerButton(buttonDefinition);
     }
@@ -210,10 +208,10 @@ export class InternalController {
         };
   }
 
-  private updateMouseButton(
-    buttonDefinition: MouseButtonDefinition
+  private updatePointerButton(
+    buttonDefinition: PointerButtonDefinition
   ): ControllerButton {
-    return mouseButtonSource.isMouseButtonPressed(buttonDefinition.button)
+    return pointerSource.isButtonPressed(buttonDefinition.button)
       ? {
           pressed: true,
           value: 1,
@@ -223,10 +221,6 @@ export class InternalController {
           value: 0,
         };
   }
-
-  private updatePointerButton(
-    buttonDefinition: PointerButtonDefinition
-  ): ControllerButton {}
 
   private updateAxis(axisDefinition: AxisDefinition): ControllerAxis {
     switch (axisDefinition.type) {

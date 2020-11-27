@@ -14,7 +14,7 @@ export {
   key,
   GamepadButtonDefinition,
   gamepadButton,
-  MouseButtonDefinition,
+  PointerButtonDefinition,
   mouseButton,
   AxisDefinition,
   gamepadAxis,

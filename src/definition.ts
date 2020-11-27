@@ -1,7 +1,7 @@
 export type ButtonDefinition =
   | KeyButtonDefinition
   | GamepadButtonDefinition
-  | MouseButtonDefinition;
+  | PointerButtonDefinition;
 
 export function isButtonDefinition(
   input: string,

@@ -8,8 +8,8 @@ interface Pointer {
 
 class PointerSource {
   private buttonsPressed: Set<number>;
-  private pointersById: Map<PointerEvent["pointerId"], Pointer>;
-  private pointersByOwner: Map<number, Pointer>;
+  // private pointersById: Map<PointerEvent["pointerId"], Pointer>;
+  // private pointersByOwner: Map<number, Pointer>;
 
   constructor() {
     this.buttonsPressed = new Set();
@@ -47,3 +47,5 @@ class PointerSource {
 
   private onPointerCancel = (pointerEvent: PointerEvent) => {};
 }
+
+export const pointerSource = new PointerSource();
