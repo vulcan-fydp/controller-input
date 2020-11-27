@@ -39,15 +39,38 @@ export function gamepadButton(
   };
 }
 
-export interface MouseButtonDefinition {
-  type: "mouse";
+export interface PointerButtonDefinition {
+  type: "pointer";
   button: number;
 }
 
-export function mouseButton(buttonIndex: number): MouseButtonDefinition {
+export function mouseButton(buttonIndex: number): PointerButtonDefinition {
   return {
-    type: "mouse",
+    type: "pointer",
     button: buttonIndex,
+  };
+}
+
+export interface PositionalButtonDefinition {
+  type: "positional";
+  x: number;
+  y: number;
+  paddingX: number;
+  paddingY: number;
+}
+
+export function positionalButton(
+  x: number,
+  y: number,
+  paddingX: number,
+  paddingY: number = paddingX
+): PositionalButtonDefinition {
+  return {
+    type: "positional",
+    x,
+    y,
+    paddingX,
+    paddingY,
   };
 }
 
@@ -68,6 +91,11 @@ export function gamepadAxis(
     gamepad,
     axis,
   };
+}
+
+export interface MouseAxisDefinition {
+  type: "mouse";
+  axis: "x" | "y";
 }
 
 export type ControllerInputDefinition = AxisDefinition | ButtonDefinition;
