@@ -1,4 +1,4 @@
-import { forceUpdate } from "@src/api";
+import { forceUpdate } from "./api";
 
 export abstract class Scheduler {
   private scheduled = false;

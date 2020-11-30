@@ -11,11 +11,13 @@
     "pointer"
   ],
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "webpack --config config/webpack.prod.js",
     "lint": "eslint --ext .js,.ts,.tsx src/ --fix",
     "start": "webpack --config config/webpack.dev.js --watch",
-    "prepare": "npm run build"
+    "prepare": "npm run build && npm run types",
+    "types": "tsc --declaration --emitDeclarationOnly"
   },
   "author": "Michal Jez",
   "license": "ISC",

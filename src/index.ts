@@ -4,9 +4,9 @@ export {
   addController,
   removeController,
   forceUpdate,
-} from "@src/api";
+} from "./api";
 
-export { Controller, ControllerButton, ControllerAxis } from "@src/controller";
+export { Controller, ControllerButton, ControllerAxis } from "./controller";
 
 export {
   ButtonDefinition,
@@ -20,6 +20,6 @@ export {
   gamepadAxis,
   ControllerInputDefinition,
   ControllerDefinition,
-} from "@src/definition";
+} from "./definition";
 
-export { Scheduler } from "@src/scheduler";
+export { Scheduler } from "./scheduler";

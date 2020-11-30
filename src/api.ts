@@ -1,6 +1,6 @@
-import { InternalController } from "@src/controller";
-import { ControllerDefinition } from "@src/definition";
-import { RequestAnimationFrameScheduler, Scheduler } from "@src/scheduler";
+import { InternalController } from "./controller";
+import { ControllerDefinition } from "./definition";
+import { RequestAnimationFrameScheduler, Scheduler } from "./scheduler";
 import { ControllerInputEventData } from "./events";
 
 /**
