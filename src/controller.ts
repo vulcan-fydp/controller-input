@@ -135,8 +135,8 @@ export class InternalController {
     };
   }
 
-  public update = (): Partial<Controller> => {
-    const controllerDiff: Partial<Controller> = {};
+  public update = (): Controller | undefined => {
+    let controllerUpdated = false;
 
     this.controllerDefinition.forEach(([controllerInput, inputDefinition]) => {
       if (isButtonDefinition(controllerInput, inputDefinition)) {
@@ -147,7 +147,7 @@ export class InternalController {
             this.controller[controllerInput] as ControllerButton
           )
         ) {
-          controllerDiff[controllerInput] = button;
+          controllerUpdated = true;
           this.controller[controllerInput] = button;
         }
       } else {
@@ -158,16 +158,41 @@ export class InternalController {
             this.controller[controllerInput] as ControllerAxis
           )
         ) {
-          controllerDiff[controllerInput] = axis as ControllerButton &
-            ControllerAxis;
+          controllerUpdated = true;
           this.controller[controllerInput] = axis as ControllerButton &
             ControllerAxis;
         }
       }
     });
 
-    return controllerDiff;
+    return controllerUpdated ? this.getController() : undefined;
   };
+
+  public getController(): Controller {
+    return {
+      button0: { ...this.controller.button0 },
+      button1: { ...this.controller.button1 },
+      button2: { ...this.controller.button2 },
+      button3: { ...this.controller.button3 },
+      button4: { ...this.controller.button4 },
+      button5: { ...this.controller.button5 },
+      button6: { ...this.controller.button6 },
+      button7: { ...this.controller.button7 },
+      button8: { ...this.controller.button8 },
+      button9: { ...this.controller.button9 },
+      button10: { ...this.controller.button10 },
+      button11: { ...this.controller.button11 },
+      button12: { ...this.controller.button12 },
+      button13: { ...this.controller.button13 },
+      button14: { ...this.controller.button14 },
+      button15: { ...this.controller.button15 },
+      button16: { ...this.controller.button16 },
+      axis0: { ...this.controller.axis0 },
+      axis1: { ...this.controller.axis1 },
+      axis2: { ...this.controller.axis2 },
+      axis3: { ...this.controller.axis3 },
+    };
+  }
 
   private updateButton(buttonDefinition: ButtonDefinition): ControllerButton {
     switch (buttonDefinition.type) {

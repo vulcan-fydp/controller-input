@@ -60,10 +60,10 @@ export const forceUpdate = (emitEvents = true): ControllerInputEventData[] => {
   const updatedControllers: ControllerInputEventData[] = [];
 
   controllers.forEach((controller, id) => {
-    const controllerDiff = controller.update();
-    if (Object.keys(controllerDiff).length > 0) {
+    const updatedController = controller.update();
+    if (updatedController) {
       updatedControllers.push({
-        controllerDiff,
+        controller: updatedController,
         id,
       });
     }

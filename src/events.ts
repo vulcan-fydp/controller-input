@@ -2,7 +2,7 @@ import { Controller } from "./controller";
 
 export type ControllerInputEventData = {
   id: number;
-  controllerDiff: Partial<Controller>;
+  controller: Controller;
 };
 
 export type ControllerInputEvent = CustomEvent<ControllerInputEventData>;
