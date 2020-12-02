@@ -1,6 +1,6 @@
 {
   "name": "controller-input",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Unifies browser user input sources into a simple controller model, useful for loop driven applications like games",
   "keywords": [
     "keyboard",
