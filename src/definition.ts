@@ -80,16 +80,19 @@ export interface GamepadAxisDefinition {
   type: "gamepad";
   gamepad: Gamepad["index"];
   axis: number;
+  threshold: number;
 }
 
 export function gamepadAxis(
   gamepad: Gamepad["index"],
-  axis: number
+  axis: number,
+  threshold = 0.02
 ): GamepadAxisDefinition {
   return {
     type: "gamepad",
     gamepad,
     axis,
+    threshold,
   };
 }
 

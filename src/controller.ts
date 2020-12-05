@@ -37,9 +37,10 @@ export interface ControllerAxis {
 
 export function areControllerAxesEqual(
   ca1: ControllerAxis,
-  ca2: ControllerAxis
+  ca2: ControllerAxis,
+  threshold = 0.02
 ): boolean {
-  return ca1.value === ca2.value;
+  return Math.abs(ca1.value - ca2.value) <= threshold;
 }
 
 const defaultControllerAxis = (): ControllerAxis => ({
@@ -155,7 +156,8 @@ export class InternalController {
         if (
           !areControllerAxesEqual(
             axis,
-            this.controller[controllerInput] as ControllerAxis
+            this.controller[controllerInput] as ControllerAxis,
+            inputDefinition.threshold
           )
         ) {
           controllerUpdated = true;
