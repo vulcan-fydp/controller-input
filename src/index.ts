@@ -20,6 +20,7 @@ export {
   gamepadAxis,
   ControllerInputDefinition,
   ControllerDefinition,
+  gamepad,
 } from "./definition";
 
 export { Scheduler } from "./scheduler";

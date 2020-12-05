@@ -124,3 +124,29 @@ export interface ControllerDefinition {
   axis2?: AxisDefinition;
   axis3?: AxisDefinition;
 }
+
+export function gamepad(gamepad: number): ControllerDefinition {
+  return {
+    button0: gamepadButton(gamepad, 0),
+    button1: gamepadButton(gamepad, 1),
+    button2: gamepadButton(gamepad, 2),
+    button3: gamepadButton(gamepad, 3),
+    button4: gamepadButton(gamepad, 4),
+    button5: gamepadButton(gamepad, 5),
+    button6: gamepadButton(gamepad, 6),
+    button7: gamepadButton(gamepad, 7),
+    button8: gamepadButton(gamepad, 8),
+    button9: gamepadButton(gamepad, 9),
+    button10: gamepadButton(gamepad, 10),
+    button11: gamepadButton(gamepad, 11),
+    button12: gamepadButton(gamepad, 12),
+    button13: gamepadButton(gamepad, 13),
+    button14: gamepadButton(gamepad, 14),
+    button15: gamepadButton(gamepad, 15),
+    button16: gamepadButton(gamepad, 16),
+    axis0: gamepadAxis(gamepad, 0),
+    axis1: gamepadAxis(gamepad, 1),
+    axis2: gamepadAxis(gamepad, 2),
+    axis3: gamepadAxis(gamepad, 3),
+  };
+}
