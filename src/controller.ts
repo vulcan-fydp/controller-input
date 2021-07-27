@@ -9,6 +9,8 @@ import {
   PositionalButtonDefinition,
   AxisDefinition,
   GamepadAxisDefinition,
+  DomButtonDefinition,
+  ScreenButtonDefinition,
 } from "./definition";
 import { gamepadSource } from "./sources/gamepads";
 import { keySource } from "./sources/keys";
@@ -108,7 +110,7 @@ export class InternalController {
   constructor(controllerDefinition: ControllerDefinition) {
     this.controllerDefinition = (Object.entries(controllerDefinition) as Array<
       [keyof ControllerDefinition, ControllerInputDefinition]
-    >).filter(([key]) => controllerInputs.has(key));
+    >).filter(([key, value]) => controllerInputs.has(key) && !!value);
 
     this.controller = {
       button0: defaultControllerButton(),
@@ -134,6 +136,14 @@ export class InternalController {
       axis2: defaultControllerAxis(),
       axis3: defaultControllerAxis(),
     };
+
+    this.controllerDefinition.forEach(([controllerInput, inputDefinition]) => {
+      if (isButtonDefinition(controllerInput, inputDefinition)) {
+        this.initializeButton(inputDefinition);
+      } else {
+        this.initializeAxis(inputDefinition);
+      }
+    });
   }
 
   public update = (): Controller | undefined => {
@@ -196,6 +206,19 @@ export class InternalController {
     };
   }
 
+  private initializeButton(buttonDefinition: ButtonDefinition): void {
+    switch (buttonDefinition.type) {
+      case "gamepad":
+        break;
+      case "key":
+        break;
+      case "pointer":
+        break;
+      case "dom":
+        break;
+    }
+  }
+
   private updateButton(buttonDefinition: ButtonDefinition): ControllerButton {
     switch (buttonDefinition.type) {
       case "gamepad":
@@ -204,6 +227,10 @@ export class InternalController {
         return this.updateKeyButton(buttonDefinition);
       case "pointer":
         return this.updatePointerButton(buttonDefinition);
+      case "dom":
+        return this.updateDomButton(buttonDefinition);
+      case "screen":
+        return this.updateScreenButton(buttonDefinition);
     }
   }
 
@@ -247,6 +274,34 @@ export class InternalController {
           pressed: false,
           value: 0,
         };
+  }
+
+  private updateDomButton(
+    buttonDefinition: DomButtonDefinition
+  ): ControllerButton {}
+
+  private initializeAxis(axisDefinition: AxisDefinition): void {
+    switch (axisDefinition.type) {
+      case "gamepad":
+        break;
+    }
+  }
+
+  private updateScreenButton(
+    buttonDefinition: ScreenButtonDefinition
+  ): ControllerButton {
+    const pointer = pointerSource.pointerWithin(buttonDefinition.isWithin);
+    if (pointer && pointer.buttons > 0) {
+      return {
+        pressed: true,
+        value: pointer.force,
+      };
+    } else {
+      return {
+        pressed: false,
+        value: 0,
+      };
+    }
   }
 
   private updateAxis(axisDefinition: AxisDefinition): ControllerAxis {

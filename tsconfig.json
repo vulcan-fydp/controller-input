@@ -3,6 +3,7 @@
     "strict": true,
     "target": "es5",
     "lib": ["es2019", "dom"],
+    "downlevelIteration": true,
     "baseUrl": "src",
     "paths": {
       // Keep up to date with webpack.config.js

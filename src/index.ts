@@ -16,6 +16,8 @@ export {
   gamepadButton,
   PointerButtonDefinition,
   mouseButton,
+  screenButton,
+  ScreenButtonDefinition,
   AxisDefinition,
   gamepadAxis,
   ControllerInputDefinition,

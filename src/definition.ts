@@ -1,7 +1,9 @@
 export type ButtonDefinition =
   | KeyButtonDefinition
   | GamepadButtonDefinition
-  | PointerButtonDefinition;
+  | PointerButtonDefinition
+  | ScreenButtonDefinition
+  | DomButtonDefinition;
 
 export function isButtonDefinition(
   input: string,
@@ -51,26 +53,29 @@ export function mouseButton(buttonIndex: number): PointerButtonDefinition {
   };
 }
 
-export interface PositionalButtonDefinition {
-  type: "positional";
-  x: number;
-  y: number;
-  paddingX: number;
-  paddingY: number;
+export interface ScreenButtonDefinition {
+  type: "screen";
+  isWithin: (x: number, y: number) => boolean;
 }
 
-export function positionalButton(
-  x: number,
-  y: number,
-  paddingX: number,
-  paddingY: number = paddingX
-): PositionalButtonDefinition {
+export function screenButton(
+  isWithin: (x: number, y: number) => boolean
+): ScreenButtonDefinition {
   return {
-    type: "positional",
-    x,
-    y,
-    paddingX,
-    paddingY,
+    type: "screen",
+    isWithin,
+  };
+}
+
+export interface DomButtonDefinition {
+  type: "dom";
+  domNode: HTMLElement;
+}
+
+export function domButton(domNode: HTMLElement): DomButtonDefinition {
+  return {
+    type: "dom",
+    domNode,
   };
 }
 
