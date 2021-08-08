@@ -1,4 +1,14 @@
-class GamepadSource {
+import { Source } from ".";
+
+export class GamepadSource extends Source {
+  start() {
+    this.started = true;
+  }
+
+  stop() {
+    this.started = false;
+  }
+
   public getGamepadButton(gamepad: number, button: number): GamepadButton {
     const gamepadObj = navigator.getGamepads()[gamepad];
 
@@ -19,5 +29,3 @@ class GamepadSource {
     return gamepadObj.axes[axis];
   }
 }
-
-export const gamepadSource = new GamepadSource();

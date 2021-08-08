@@ -1,3 +1,5 @@
+import { Source } from ".";
+
 interface Pointer {
   startX: number;
   startY: number;
@@ -8,11 +10,23 @@ interface Pointer {
   buttons: number;
 }
 
-class PointerSource {
+function pointInCircle(
+  px: number,
+  py: number,
+  cx: number,
+  cy: number,
+  radius: number
+) {
+  return (px - cx) * (px - cx) + (py - cy) * (py - cy) <= radius * radius;
+}
+
+export class PointerSource extends Source {
   private buttonsPressed: Set<number>;
   private pointers: Map<number, Pointer>;
 
-  constructor() {
+  constructor(private canvas: HTMLCanvasElement) {
+    super();
+
     this.buttonsPressed = new Set();
     this.pointers = new Map();
 
@@ -20,17 +34,29 @@ class PointerSource {
   }
 
   public start() {
-    window.addEventListener("pointerdown", this.onPointerDown);
-    window.addEventListener("pointerup", this.onPointerUp);
-    window.addEventListener("pointermove", this.onPointerMove);
-    window.addEventListener("pointercancel", this.onPointerCancel);
+    if (this.started) {
+      return;
+    }
+
+    this.started = true;
+
+    this.canvas.addEventListener("pointerdown", this.onPointerDown);
+    this.canvas.addEventListener("pointerup", this.onPointerUp);
+    this.canvas.addEventListener("pointermove", this.onPointerMove);
+    this.canvas.addEventListener("pointercancel", this.onPointerCancel);
   }
 
   public stop() {
-    window.removeEventListener("pointerdown", this.onPointerDown);
-    window.removeEventListener("pointerup", this.onPointerUp);
-    window.removeEventListener("pointermove", this.onPointerMove);
-    window.removeEventListener("pointercancel", this.onPointerCancel);
+    if (!this.started) {
+      return;
+    }
+
+    this.started = false;
+
+    this.canvas.removeEventListener("pointerdown", this.onPointerDown);
+    this.canvas.removeEventListener("pointerup", this.onPointerUp);
+    this.canvas.removeEventListener("pointermove", this.onPointerMove);
+    this.canvas.removeEventListener("pointercancel", this.onPointerCancel);
   }
 
   public isButtonPressed(button: number): boolean {
@@ -38,11 +64,16 @@ class PointerSource {
   }
 
   public pointerWithin(
-    within: (x: number, y: number) => boolean
-  ): Pointer | undefined {
+    cx: number,
+    cy: number,
+    radius: number
+  ): { x: number; y: number } | undefined {
     for (const [, pointer] of this.pointers) {
-      if (within(pointer.x, pointer.y)) {
-        return pointer;
+      if (pointInCircle(pointer.x, pointer.y, cx, cy, radius)) {
+        return {
+          x: (pointer.x - cx) / radius,
+          y: (pointer.y - cy) / radius,
+        };
       }
     }
 
@@ -53,8 +84,8 @@ class PointerSource {
     const pointer = this.getPointer(pointerEvent);
     this.buttonsPressed.add(pointerEvent.button);
 
-    pointer.startX = pointerEvent.x;
-    pointer.startY = pointerEvent.y;
+    pointer.startX = pointerEvent.offsetX;
+    pointer.startY = pointerEvent.offsetY;
 
     pointer.buttons = pointerEvent.buttons;
 
@@ -73,8 +104,8 @@ class PointerSource {
   private onPointerMove = (pointerEvent: PointerEvent) => {
     const pointer = this.getPointer(pointerEvent);
 
-    pointer.x = pointerEvent.x;
-    pointer.y = pointerEvent.y;
+    pointer.x = pointerEvent.offsetX;
+    pointer.y = pointerEvent.offsetY;
 
     pointerEvent.preventDefault();
   };
@@ -105,5 +136,3 @@ class PointerSource {
     return pointer;
   }
 }
-
-export const pointerSource = new PointerSource();

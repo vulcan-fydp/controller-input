@@ -6,12 +6,15 @@ const srcPath = path.join(__dirname, "..", "src");
 module.exports = {
   entry: {
     index: path.join(srcPath, "index.ts"),
+    visualize: path.join(srcPath, "visualize", "index.ts"),
   },
   output: {
     filename: "[name].js",
     path: buildPath,
-    library: "ControllerInput",
-    libraryTarget: "umd",
+    library: {
+      name: "ControllerInput",
+      type: "assign-properties",
+    },
     globalObject: "this",
     umdNamedDefine: true,
   },
@@ -21,6 +24,10 @@ module.exports = {
         test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.svg$/,
+        type: "asset/source",
       },
     ],
   },

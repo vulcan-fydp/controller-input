@@ -1,23 +1,31 @@
-class KeySource {
+import { Source } from ".";
+
+export class KeyboardSource extends Source {
   private keysPressed: Set<string> = new Set();
 
-  constructor() {
-    this.start();
-  }
+  public start() {
+    if (this.started) {
+      return;
+    }
 
-  public start = () => {
+    this.started = true;
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
-  };
+  }
 
-  public stop = () => {
+  public stop() {
+    if (!this.started) {
+      return;
+    }
+
+    this.started = false;
     this.keysPressed.clear();
 
     window.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("keyup", this.onKeyUp);
-  };
+  }
 
-  public isKeyPressed = (keyCode: string) => {
+  public isKeyPressed = (keyCode: string): boolean => {
     return this.keysPressed.has(keyCode);
   };
 
@@ -29,5 +37,3 @@ class KeySource {
     this.keysPressed.delete(keyEvent.code);
   };
 }
-
-export const keySource = new KeySource();
