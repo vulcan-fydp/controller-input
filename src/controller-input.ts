@@ -27,7 +27,7 @@ export class ControllerInput {
   private keyboardSource: KeyboardSource;
   private pointerSource: PointerSource;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(private canvas: HTMLElement) {
     this.controllers = new Map<ControllerId, Controller>();
 
     this.gamepadSource = new GamepadSource();
@@ -107,7 +107,7 @@ export class ControllerInput {
         };
       }
       case "ControllerTouchButton": {
-        const pressed = !!this.pointerSource.pointerWithin(
+        const pressed = !!this.pointerSource.pointerWithinAndDown(
           ...this.getPoint(button.anchor, button.xOffset, button.yOffset),
           button.radius
         );
@@ -155,7 +155,18 @@ export class ControllerInput {
         throw new Error();
       }
       case "ControllerTouchJoystickAxis": {
-        throw new Error();
+        const val = this.pointerSource.pointerWithinAndDown(
+          ...this.getPoint(axis.anchor, axis.xOffset, axis.yOffset),
+          axis.radius
+        );
+        if (!val) {
+          return {
+            value: 0,
+          };
+        }
+        return {
+          value: axis.axis === Axis.HORIZONTAL ? val.x : val.y,
+        };
       }
     }
   }

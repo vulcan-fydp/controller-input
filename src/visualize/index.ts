@@ -84,11 +84,12 @@ export function initializeControllerStateVisualization() {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.style.position = "fixed";
   svg.style.top = "0";
-  svg.style.left = "0";
-  svg.style.width = "100%";
-  svg.style.height = "100%";
+  svg.style.right = "0";
+  svg.style.width = "500px";
+  svg.style.height = "auto";
   svg.innerHTML = controllerSvg;
   svg.id = ID;
+  svg.setAttribute("viewBox", "0 0 1053 744");
   document.body.appendChild(svg);
 }
 

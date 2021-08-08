@@ -7,7 +7,7 @@ interface Pointer {
   y: number;
   force: number;
   id: number;
-  buttons: number;
+  down: boolean;
 }
 
 function pointInCircle(
@@ -24,7 +24,7 @@ export class PointerSource extends Source {
   private buttonsPressed: Set<number>;
   private pointers: Map<number, Pointer>;
 
-  constructor(private canvas: HTMLCanvasElement) {
+  constructor(private canvas: HTMLElement) {
     super();
 
     this.buttonsPressed = new Set();
@@ -63,13 +63,13 @@ export class PointerSource extends Source {
     return this.buttonsPressed.has(button);
   }
 
-  public pointerWithin(
+  public pointerWithinAndDown(
     cx: number,
     cy: number,
     radius: number
   ): { x: number; y: number } | undefined {
     for (const [, pointer] of this.pointers) {
-      if (pointInCircle(pointer.x, pointer.y, cx, cy, radius)) {
+      if (pointer.down && pointInCircle(pointer.x, pointer.y, cx, cy, radius)) {
         return {
           x: (pointer.x - cx) / radius,
           y: (pointer.y - cy) / radius,
@@ -87,16 +87,15 @@ export class PointerSource extends Source {
     pointer.startX = pointerEvent.offsetX;
     pointer.startY = pointerEvent.offsetY;
 
-    pointer.buttons = pointerEvent.buttons;
+    pointer.down = true;
 
     pointerEvent.preventDefault();
   };
 
   private onPointerUp = (pointerEvent: PointerEvent) => {
-    const pointer = this.getPointer(pointerEvent);
     this.buttonsPressed.delete(pointerEvent.button);
 
-    pointer.buttons = pointerEvent.buttons;
+    this.pointers.delete(pointerEvent.pointerId);
 
     pointerEvent.preventDefault();
   };
@@ -120,18 +119,16 @@ export class PointerSource extends Source {
     let pointer = this.pointers.get(pointerEvent.pointerId);
     if (!pointer) {
       pointer = {
-        startX: pointerEvent.x,
-        startY: pointerEvent.y,
-        x: pointerEvent.x,
-        y: pointerEvent.y,
+        startX: pointerEvent.offsetX,
+        startY: pointerEvent.offsetY,
+        x: pointerEvent.offsetX,
+        y: pointerEvent.offsetY,
         force: pointerEvent.pressure,
         id: pointerEvent.pointerId,
-        buttons: pointerEvent.buttons,
+        down: false,
       };
       this.pointers.set(pointerEvent.pointerId, pointer);
     }
-
-    console.log(this.pointers);
 
     return pointer;
   }
