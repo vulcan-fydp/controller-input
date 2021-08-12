@@ -12,6 +12,9 @@ module.exports = {
     filename: "[name].js",
     path: buildPath,
     library: "ControllerInput",
+    libraryTarget: "umd",
+    globalObject: "this",
+    umdNamedDefine: true,
   },
   module: {
     rules: [
