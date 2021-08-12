@@ -13,7 +13,6 @@ module.exports = {
     path: buildPath,
     library: {
       name: "ControllerInput",
-      type: "assign-properties",
     },
     globalObject: "this",
     umdNamedDefine: true,
