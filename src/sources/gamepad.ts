@@ -1,11 +1,11 @@
 import { Source } from ".";
 
 export class GamepadSource extends Source {
-  start() {
+  start(): void {
     this.started = true;
   }
 
-  stop() {
+  stop(): void {
     this.started = false;
   }
 
@@ -13,7 +13,11 @@ export class GamepadSource extends Source {
     const gamepadObj = navigator.getGamepads()[gamepad];
 
     if (!gamepadObj) {
-      throw "bad";
+      return {
+        pressed: false,
+        touched: false,
+        value: 0,
+      };
     }
 
     return gamepadObj.buttons[button];
@@ -23,7 +27,7 @@ export class GamepadSource extends Source {
     const gamepadObj = navigator.getGamepads()[gamepad];
 
     if (!gamepadObj) {
-      throw "bad";
+      return 0;
     }
 
     return gamepadObj.axes[axis];
