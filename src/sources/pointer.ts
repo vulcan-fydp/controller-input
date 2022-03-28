@@ -33,7 +33,7 @@ export class PointerSource extends Source {
     this.start();
   }
 
-  public start() {
+  public start(): void {
     if (this.started) {
       return;
     }
@@ -46,7 +46,7 @@ export class PointerSource extends Source {
     this.canvas.addEventListener("pointercancel", this.onPointerCancel);
   }
 
-  public stop() {
+  public stop(): void {
     if (!this.started) {
       return;
     }
@@ -61,6 +61,36 @@ export class PointerSource extends Source {
 
   public isButtonPressed(button: number): boolean {
     return this.buttonsPressed.has(button);
+  }
+
+  public getPointerInitiallyPressedWithin(
+    cx: number,
+    cy: number,
+    radius: number
+  ): { x: number; y: number; within: boolean } | undefined {
+    for (const [, pointer] of this.pointers) {
+      if (
+        pointer.down &&
+        pointInCircle(pointer.startX, pointer.startY, cx, cy, radius)
+      ) {
+        if (pointInCircle(pointer.x, pointer.y, cx, cy, radius)) {
+          return {
+            x: (pointer.x - cx) / radius,
+            y: (pointer.y - cy) / radius,
+            within: true,
+          };
+        } else {
+          const angle = Math.atan2(pointer.y - cy, pointer.x - cx);
+          return {
+            x: Math.cos(angle),
+            y: Math.sin(angle),
+            within: false,
+          };
+        }
+      }
+    }
+
+    return undefined;
   }
 
   public pointerWithinAndDown(

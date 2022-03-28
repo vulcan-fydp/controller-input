@@ -136,3 +136,5 @@ export function visualizeControllerState(state: ControllerState): void {
     axis23.setAttribute("cy", `${AXIS_CY + state.axes[3].value * AXIS_RADIUS}`);
   }
 }
+
+export { playground } from "./playground";

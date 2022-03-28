@@ -107,10 +107,11 @@ export class ControllerInput {
         };
       }
       case "ControllerTouchButton": {
-        const pressed = !!this.pointerSource.pointerWithinAndDown(
+        const pointer = this.pointerSource.getPointerInitiallyPressedWithin(
           ...this.getPoint(button.anchor, button.xOffset, button.yOffset),
           button.radius
         );
+        const pressed = !!pointer && pointer.within;
         return {
           pressed,
           value: pressed ? 1 : 0,
@@ -155,7 +156,7 @@ export class ControllerInput {
         throw new Error();
       }
       case "ControllerTouchJoystickAxis": {
-        const val = this.pointerSource.pointerWithinAndDown(
+        const val = this.pointerSource.getPointerInitiallyPressedWithin(
           ...this.getPoint(axis.anchor, axis.xOffset, axis.yOffset),
           axis.radius
         );
